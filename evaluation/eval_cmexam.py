@@ -483,7 +483,7 @@ def load_model_and_tokenizer(args: argparse.Namespace) -> tuple[Any, Any]:
 
     import torch
     from peft import PeftModel
-    from transformers import AutoConfig, AutoModelForCausalLM, AutoModelForConditionalGeneration, AutoTokenizer
+    from transformers import AutoConfig, AutoModelForCausalLM, AutoModelForMultimodalLM, AutoModelForSeq2SeqLM, AutoTokenizer
 
     common = {
         "cache_dir": str(args.cache_dir) if args.cache_dir else None,
@@ -502,11 +502,12 @@ def load_model_and_tokenizer(args: argparse.Namespace) -> tuple[Any, Any]:
     dtype = args.torch_dtype if args.torch_dtype == "auto" else getattr(torch, args.torch_dtype)
     config = AutoConfig.from_pretrained(args.model_name_or_path, **common)
     architectures = getattr(config, "architectures", None) or []
-    model_class = (
-        AutoModelForConditionalGeneration
-        if any("ConditionalGeneration" in architecture for architecture in architectures)
-        else AutoModelForCausalLM
-    )
+    if "Qwen3_5ForConditionalGeneration" in architectures:
+        model_class = AutoModelForMultimodalLM
+    elif getattr(config, "is_encoder_decoder", False):
+        model_class = AutoModelForSeq2SeqLM
+    else:
+        model_class = AutoModelForCausalLM
     model_kwargs = {**common, "torch_dtype": dtype, "low_cpu_mem_usage": True}
     if args.device == "auto":
         model_kwargs["device_map"] = "auto"
