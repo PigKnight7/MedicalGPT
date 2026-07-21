@@ -439,7 +439,7 @@ def main():
     # Preprocessing the datasets
     max_length = script_args.model_max_length
 
-    def preprocess_function(examples):
+    def preprocess_function(examples):#重要，重点看
         """
         Preprocessing the datasets.
             part of code modified from https://github.com/lm-sys/FastChat

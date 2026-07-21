@@ -134,3 +134,22 @@ dmypy.json
 outputs-dpo-qwen-v1/
 cache/
 outputs-*/
+
+# AutoDL持久化产物与大模型文件
+.venv/
+.venv-autodl/
+venvs/
+models/
+outputs/
+logs/
+runs/
+checkpoints/
+evaluations/
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.ckpt
+requirements-lock-autodl.txt
+autodl_environment.json
+runtime_env.sh
